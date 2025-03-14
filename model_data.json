@@ -1,0 +1,6 @@
+{
+  "Install and run Visual Studio Code. In your Terminal (or Command Prompt), type code -s and press Enter. Copy and paste the entire output below. What is the output ofcode -s?": "Version:          Code 1.96.3 (91fbdddc47bc9c09064bf7acf133d22631cbf083, 2025-01-09T18:14:09.060Z)\nOS Version:       Windows_NT x64 10.0.26120\nCPUs:             11th Gen Intel(R) Core(TM) i5-11260H @ 2.60GHz (12 x 2611)\n",
+  "Download and unzip file test.zip which has a single extract.csv file inside. What is the value in the \"answer\" column of the CSV file?": "This is the answer!",
+  "What is the output of the following Python code?\n```python\nfor i in range(5):\n    print(i * 2)\n```": "0\n2\n4\n6\n8",
+  "What is the capital of France?": "Paris"
+}
