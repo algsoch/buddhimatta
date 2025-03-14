@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buddhimatta - Assignment Answer API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .container {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        textarea {
+            height: 100px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            white-space: pre-wrap;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            background-color: #f1f1f1;
+        }
+        .tab.active {
+            background-color: white;
+            border-bottom: 2px solid white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Buddhimatta - Assignment Answer API</h1>
+    
+    <div class="tabs">
+        <div class="tab active" onclick="openTab(event, 'askTab')">Ask a Question</div>
+        <div class="tab" onclick="openTab(event, 'feedbackTab')">Provide Feedback</div>
+    </div>
+    
+    <div id="askTab" class="tab-content active">
+        <div class="container">
+            <h2>Ask a Question</h2>
+            <form id="questionForm">
+                <label for="question">Question:</label>
+                <textarea id="question" name="question" required></textarea>
+                
+                <label for="file">File (optional):</label>
+                <input type="file" id="file" name="file">
+                
+                <button type="submit">Submit</button>
+            </form>
+            
+            <div class="result" id="questionResult"></div>
+        </div>
+    </div>
+    
+    <div id="feedbackTab" class="tab-content">
+        <div class="container">
+            <h2>Provide Feedback</h2>
+            <form id="feedbackForm">
+                <label for="feedbackQuestion">Question:</label>
+                <textarea id="feedbackQuestion" name="feedbackQuestion" required></textarea>
+                
+                <label for="correctAnswer">Correct Answer:</label>
+                <textarea id="correctAnswer" name="correctAnswer" required></textarea>
+                
+                <button type="submit">Submit Feedback</button>
+            </form>
+            
+            <div class="result" id="feedbackResult"></div>
+        </div>
+    </div>
+    
+    <script>
+        function openTab(evt, tabName) {
+            const tabContents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            const tabs = document.getElementsByClassName("tab");
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+        
+        document.getElementById("questionForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            
+            const question = document.getElementById("question").value;
+            const file = document.getElementById("file").files[0];
+            const resultDiv = document.getElementById("questionResult");
+            
+            resultDiv.textContent = "Processing...";
+            
+            const formData = new FormData();
+            formData.append("question", question);
+            if (file) {
+                formData.append("file", file);
+            }
+            
+            try {
+                const response = await fetch("/api", {
+                    method: "POST",
+                    body: formData
+                });
+                
+                const data = await response.json();
+                resultDiv.textContent = `Answer: ${data.answer}`;
+            } catch (error) {
+                resultDiv.textContent = `Error: ${error.message}`;
+            }
+        });
+        
+        document.getElementById("feedbackForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            
+            const question = document.getElementById("feedbackQuestion").value;
+            const correctAnswer = document.getElementById("correctAnswer").value;
+            const resultDiv = document.getElementById("feedbackResult");
+            
+            resultDiv.textContent = "Sending feedback...";
+            
+            try {
+                const response = await fetch("/api/feedback", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        question: question,
+                        correct_answer: correctAnswer
+                    })
+                });
+                
+                const data = await response.json();
+                resultDiv.textContent = data.message;
+            } catch (error) {
+                resultDiv.textContent = `Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>

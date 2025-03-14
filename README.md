@@ -48,12 +48,28 @@ curl -X POST "https://your-app.vercel.app/api/" \
 
 ## Deployment
 
-This application can be deployed to any platform that supports Python applications, such as:
+### Deploying to Vercel
 
-- Vercel
+This application is optimized for deployment on Vercel. Follow these steps:
+
+1. Fork or clone this repository to your GitHub account
+2. Connect your GitHub repository to Vercel
+3. During the import, Vercel will automatically detect the FastAPI application
+4. Deploy the application
+
+The API will be available at:
+- `https://your-app.vercel.app/api/` - Main API endpoint
+- `https://your-app.vercel.app/api/feedback` - Feedback endpoint
+
+### Alternative Deployment Options
+
+You can also deploy this application to other platforms:
+
 - Heroku
 - AWS Lambda
 - Google Cloud Run
+
+For these platforms, use the `main.py` file instead of the Vercel-specific files.
 
 ## License
 

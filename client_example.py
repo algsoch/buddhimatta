@@ -3,30 +3,30 @@ import sys
 import os
 
 # Replace with your deployed API URL
-API_URL = "https://your-app.vercel.app/api/"
+API_URL = "https://buddhimatta.vercel.app/api/"  # No trailing slash for Vercel deployment
 
 def ask_question(question, file_path=None):
     """
     Send a question to the API and get the answer.
-    
+
     Args:
         question (str): The question to ask
         file_path (str, optional): Path to a file to upload with the question
-        
+
     Returns:
         str: The answer from the API
     """
     files = {}
     if file_path and os.path.exists(file_path):
         files = {"file": (os.path.basename(file_path), open(file_path, "rb"))}
-    
+
     try:
         response = requests.post(
             API_URL,
             data={"question": question},
             files=files
         )
-        
+
         if response.status_code == 200:
             return response.json()["answer"]
         else:
@@ -42,20 +42,20 @@ def ask_question(question, file_path=None):
 def provide_feedback(question, correct_answer):
     """
     Provide feedback to the API with the correct answer for a question.
-    
+
     Args:
         question (str): The question
         correct_answer (str): The correct answer
-        
+
     Returns:
         str: The response message from the API
     """
     try:
         response = requests.post(
-            API_URL + "feedback",
+            API_URL + "/feedback",  # Note the slash for Vercel deployment
             json={"question": question, "correct_answer": correct_answer}
         )
-        
+
         if response.status_code == 200:
             return response.json()["message"]
         else:
